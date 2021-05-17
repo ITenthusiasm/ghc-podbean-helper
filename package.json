@@ -1,0 +1,17 @@
+{
+  "name": "ghc-podbean-helper",
+  "version": "1.0.0",
+  "description": "A simple tool for easily managing Grace Harbor's audio via the Podbean API",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ITenthusiasm/ghc-podbean-helper.git"
+  },
+  "author": "Isaiah Thomason",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ITenthusiasm/ghc-podbean-helper/issues"
+  },
+  "homepage": "https://github.com/ITenthusiasm/ghc-podbean-helper#readme"
+}
