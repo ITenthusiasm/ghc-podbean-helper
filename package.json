@@ -3,7 +3,18 @@
   "version": "1.0.0",
   "description": "A simple tool for easily managing Grace Harbor's audio via the Podbean API",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "prestart": "cp ./GHC_2021-05-09pm_Rymer.mp3 ./local-audio-test.mp3",
+    "start": "babel-node . --extensions .ts"
+  },
+  "dependencies": {
+    "node-id3": "^0.2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.2",
+    "@babel/node": "^7.14.2",
+    "@babel/preset-typescript": "^7.13.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ITenthusiasm/ghc-podbean-helper.git"
