@@ -1,0 +1,5 @@
+{
+  "overrides": [
+    { "files": ["server/**/*.ts"], "options": { "printWidth": 100 } }
+  ]
+}
