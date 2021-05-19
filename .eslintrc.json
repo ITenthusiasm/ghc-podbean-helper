@@ -1,0 +1,53 @@
+{
+  "env": { "browser": true, "node": true },
+  "extends": [
+    "airbnb-base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/vue3-recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaFeatures": { "jsx": true },
+    "ecmaVersion": 2021,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".ts", ".vue"]
+      },
+      "alias": {
+        "map": [["@", "./src"]]
+      }
+    }
+  },
+  "rules": {
+    "func-names": "off",
+
+    // TypeScript conflits
+    "no-use-before-define": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-use-before-define": "error",
+    "@typescript-eslint/no-shadow": "error",
+
+    // Vue
+    "vue/component-tags-order": [
+      "error",
+      { "order": ["template", "script", "style"] }
+    ],
+
+    // Import
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": ["warn", { "devDependencies": true }],
+    "import/extensions": ["error", "ignorePackages", { "ts": "never" }]
+  },
+  "overrides": [
+    { "files": ["server/**/*"], "rules": { "no-console": "off" } },
+    {
+      "files": ["**/*.js"],
+      "rules": { "@typescript-eslint/no-var-requires": "off" }
+    }
+  ]
+}

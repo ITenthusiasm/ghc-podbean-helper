@@ -1,5 +1,9 @@
 {
   "overrides": [
-    { "files": ["server/**/*.ts"], "options": { "printWidth": 100 } }
+    { "files": ["server/**/*.ts"], "options": { "printWidth": 100 } },
+    {
+      "files": ["**/*.vue"],
+      "options": { "htmlWhitespaceSensitivity": "ignore", "parser": "vue" }
+    }
   ]
 }

@@ -1,4 +1,7 @@
-const NodeID3 = require("node-id3").Promise;
+/* eslint-disable */
+// Will be refactored with standardized usage later.
+
+import { Promise as NodeID3 } from "node-id3";
 
 async function readTags() {
   const path = "./local-audio-test.mp3";

@@ -6,7 +6,8 @@
   "scripts": {
     "prestart": "cp ./GHC_2021-05-09pm_Rymer.mp3 ./local-audio-test.mp3",
     "start": "babel-node . --extensions .ts",
-    "serve": "babel-node -r dotenv/config server --extensions .ts"
+    "serve": "babel-node -r dotenv/config server --extensions .ts",
+    "lint": "eslint '**/*.{js,ts,vue}'"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -21,9 +22,19 @@
     "@types/express": "^4.17.11",
     "@types/webpack-dev-middleware": "^4.2.0",
     "@types/webpack-hot-middleware": "^2.25.4",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
     "@vue/compiler-sfc": "^3.0.11",
     "css-loader": "^5.2.4",
     "dotenv": "^9.0.2",
+    "eslint": "^7.26.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.23.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-vue": "^7.9.0",
     "html-webpack-plugin": "^5.3.1",
     "prettier": "^2.3.0",
     "ts-loader": "^9.2.0",
