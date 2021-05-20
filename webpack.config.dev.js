@@ -40,9 +40,9 @@ const config = {
       },
       { test: /\.vue$/, include: frontendFolder, use: ["vue-loader"] },
       {
-        test: /\.css$/,
+        test: /\.scss$/,
         include: frontendFolder,
-        use: [{ loader: "vue-style-loader" }, { loader: "css-loader" }],
+        use: ["vue-style-loader", "css-loader", "sass-loader"],
       },
     ],
   },
