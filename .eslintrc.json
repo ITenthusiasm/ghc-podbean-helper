@@ -19,7 +19,8 @@
         "extensions": [".ts", ".vue"]
       },
       "alias": {
-        "map": [["@", "./src"]]
+        "map": [["@", "./src"]],
+        "extensions": [".ts"]
       }
     }
   },
