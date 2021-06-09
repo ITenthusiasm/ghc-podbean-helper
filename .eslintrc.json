@@ -16,7 +16,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".ts", ".vue"]
+        "extensions": [".d.ts", ".ts", ".vue"]
       },
       "alias": {
         "map": [["@", "./src"]],
