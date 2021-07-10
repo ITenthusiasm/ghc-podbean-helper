@@ -1,112 +1,270 @@
-<!-- INCOMPLETE!
-  Last stuck trying to figure out how to blur the input **while**
-  setting the input's value to the current selected value. (The problem
-  is that the blur event seems to fire first... which means the options vanish too soon)
--->
-
 <template>
-  <div class="select-wrapper">
-    <input ref="input" v-model="search" type="text" v-on="inputHandlers" />
+  <div class="select" v-on="selectHandlers">
+    <input
+      :id="$attrs.id"
+      :ref="(el) => (search.element = el)"
+      v-model="search.value"
+      type="text"
+      autocomplete="off"
+      v-on="searchHandlers"
+    />
 
-    <div v-show="showOptions" class="option-group">
+    <div v-show="showOptions" :ref="(el) => (select.dropdown = el)" class="dropdown">
       <div
-        v-for="option in filteredOptions"
+        v-for="(option, i) in filteredOptions"
         :key="option.value || option"
+        class="option"
+        :class="{ 'option--active': i === activeOption }"
         role="option"
-        @click="choose(option)"
+        v-on="optionHandlers"
       >
         {{ option.label || option }}
       </div>
+
+      <div v-if="!filteredOptions.length" class="no-options">No options :(</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, PropType } from "vue";
+import {
+  defineComponent,
+  reactive,
+  toRef,
+  toRefs,
+  computed,
+  watch,
+  onMounted,
+  PropType,
+} from "vue";
 
-type OptionObject = { label: "string"; value: "string" };
+type OptionObject = { label: string; value: string };
 type Options = string[] | OptionObject[];
 
 export default defineComponent({
   name: "Select",
+  inheritAttrs: false,
   props: {
     options: { type: Array as PropType<Options>, default: () => [] },
+    modelValue: { type: String, default: undefined },
+    value: { type: String, default: undefined },
   },
-  setup(props) {
-    const input = ref<HTMLInputElement>();
-    const search = ref("");
-    const showOptions = ref(false);
-    const selected = ref<string | OptionObject>("");
+  emits: ["change", "update:modelValue"],
+  setup(props, { emit }) {
+    /* -------------------- Initial Setup -------------------- */
+    const valueIsControlled = props.modelValue != null || props.value != null;
 
-    const filteredOptions = computed(() => {
-      const lowercaseSearch = search.value.toLowerCase();
+    /** Determines whether to use `modelValue` or `value` as a prop. */
+    const getValueProp = (() => {
+      const useVModel = props.modelValue != null;
+      const useProp = props.value != null;
 
-      return (props.options as unknown[]).filter((o) => {
-        if (typeof o === "string")
-          return o.toLowerCase().includes(lowercaseSearch);
+      if (useVModel && useProp) {
+        // eslint-disable-next-line no-console
+        console.warn("Warning: `value` will be ignored when `modelValue` is used");
+      }
 
-        return (o as OptionObject).label
-          .toLowerCase()
-          .includes(lowercaseSearch);
-      }) as Options;
+      if (useVModel) return () => props.modelValue;
+      return () => props.value;
+    })();
+
+    /* -------------------- State -------------------- */
+    // Search
+    const search = reactive({
+      element: null as HTMLInputElement | null,
+      value: "",
     });
 
-    function choose(option: Options[number]) {
-      search.value = typeof option === "string" ? option : option.label;
-      selected.value = option;
+    onMounted(() => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define -- Unavoidable
+      if (valueIsControlled && selectValueIsValid(getValueProp()))
+        search.element!.placeholder = getValueProp() as string;
+    });
 
-      showOptions.value = false;
+    // Select
+    const select = reactive({
+      dropdown: null as HTMLDivElement | null,
+      value: "",
+      activeOption: -1,
+      showOptions: false,
+      filteredOptions: computed(() => {
+        const lowercaseSearch = search.value.toLowerCase();
+
+        return (props.options as unknown[]).filter((o) => {
+          if (typeof o === "string") return o.toLowerCase().includes(lowercaseSearch);
+
+          return (o as OptionObject).label.toLowerCase().includes(lowercaseSearch);
+        }) as Options;
+      }),
+    });
+
+    /* -------------------- Effects -------------------- */
+    watch([toRef(select, "value"), toRef(props, "value"), toRef(props, "modelValue")], () => {
+      if (!valueIsControlled) search.element!.placeholder = select.value;
+
+      const valueProp = getValueProp() as string;
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define -- Unavoidable
+      if (selectValueIsValid(valueProp)) search.element!.placeholder = valueProp;
+    });
+
+    watch(toRef(select, "filteredOptions"), () => (select.activeOption = 0));
+
+    /* -------------------- Helper Functions -------------------- */
+    // Note: The internal `select.value` will always be valid and never needs to be checked.
+    function selectValueIsValid(value: string | undefined): boolean {
+      if (value === undefined) return false;
+
+      return select.filteredOptions.some((o) => {
+        const filteredValue = typeof o === "string" ? o : o.value;
+        return value === filteredValue;
+      });
     }
 
-    const inputHandlers = {
-      focus: () => (showOptions.value = true),
+    /** Sets the component's value to the provided `option` */
+    function choose(option: Options[number]) {
+      const value = typeof option === "string" ? option : option.value;
+      emit("change", value);
+      emit("update:modelValue", value);
+      if (!valueIsControlled) select.value = value;
+
+      search.value = "";
+      search.element?.blur();
+    }
+
+    function adjustScroll() {
+      if (!select.dropdown) return;
+
+      const optionEl = select.dropdown.children[select.activeOption] as HTMLElement | undefined;
+
+      if (optionEl) {
+        const bounds = select.dropdown.getBoundingClientRect();
+        const { top, bottom, height } = optionEl.getBoundingClientRect();
+
+        if (top < bounds.top) {
+          select.dropdown.scrollTop = optionEl.offsetTop;
+        } else if (bottom > bounds.bottom) {
+          select.dropdown.scrollTop = optionEl.offsetTop - (bounds.height - height);
+        }
+      }
+    }
+
+    function getOptionIndex(option: HTMLElement): number {
+      const options = Array.from(select.dropdown!.children);
+      return options.findIndex((o) => o === option);
+    }
+
+    /* --------------- Registered handlers for elements --------------- */
+    const searchHandlers = {
+      focus: () => (select.showOptions = true),
+      blur() {
+        select.showOptions = false;
+        search.value = "";
+      },
+      keydown(event: KeyboardEvent) {
+        // Selecting a value
+        if (event.key === "Enter") {
+          event.preventDefault();
+          if (!select.filteredOptions.length) return;
+
+          choose(select.filteredOptions[select.activeOption]);
+        }
+        // Clearing a value
+        else if (["Backspace", "Delete"].includes(event.key) && !search.value) {
+          const value = "";
+
+          emit("change", value);
+          emit("update:modelValue", value);
+          search.element!.placeholder = value;
+          if (!valueIsControlled) select.value = value;
+        }
+        // Move cursor up
+        else if (event.key === "ArrowUp") {
+          select.activeOption = Math.max(0, select.activeOption - 1);
+          adjustScroll();
+        }
+        // Move cursor down
+        else if (event.key === "ArrowDown") {
+          select.activeOption = Math.min(
+            select.filteredOptions.length - 1,
+            select.activeOption + 1
+          );
+          adjustScroll();
+        }
+      },
+    };
+
+    const selectHandlers = {
+      mousedown(event: MouseEvent) {
+        if (event.target !== search.element) event.preventDefault();
+      },
+    };
+
+    const optionHandlers = {
+      mouseover(event: MouseEvent & { target: HTMLDivElement }) {
+        select.activeOption = getOptionIndex(event.target);
+      },
+      click(event: MouseEvent & { target: HTMLDivElement }) {
+        const option = select.filteredOptions[getOptionIndex(event.target)];
+        choose(option);
+      },
     };
 
     return {
+      // State
       search,
-      input,
-      filteredOptions,
-      choose,
-      showOptions,
-      inputHandlers,
+      select,
+      ...toRefs(select),
+
+      // Handlers
+      searchHandlers,
+      selectHandlers,
+      optionHandlers,
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-select {
-  display: none;
-}
-
-.select-wrapper {
+.select {
   position: relative;
   display: inline-block;
-}
 
-.option-group {
-  position: absolute;
-  z-index: 2;
+  & > input[type="text"] {
+    &:not(:focus)::placeholder {
+      color: black;
+    }
+  }
 
-  border: 2px solid #42424242;
-  border-radius: 5px;
-  margin-top: -0.25rem;
+  & > .dropdown {
+    position: absolute;
+    z-index: 2;
 
-  width: 100%;
-  box-sizing: border-box;
-  max-height: 11.875rem;
-  overflow: auto;
+    border: 2px solid #42424242;
+    border-radius: 5px;
+    margin-top: -4px;
 
-  background-color: white;
-  cursor: pointer;
-  text-align: left;
-}
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 190px;
+    overflow: auto;
 
-div[role="option"] {
-  padding: 0.5rem;
+    background-color: white;
+    text-align: left;
 
-  &:hover {
-    background-color: dodgerblue;
+    & > div[role="option"].option {
+      cursor: pointer;
+      padding: 8px;
+
+      &--active {
+        color: white;
+        background-color: #2684ff;
+      }
+    }
+
+    & > div.no-options {
+      text-align: center;
+      padding: 8px;
+    }
   }
 }
 </style>

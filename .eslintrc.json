@@ -26,6 +26,7 @@
   },
   "rules": {
     "func-names": "off",
+    "no-return-assign": "off",
 
     // TypeScript conflits
     "no-use-before-define": "off",
@@ -33,11 +34,11 @@
     "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/no-shadow": "error",
 
+    // Typescript
+    "@typescript-eslint/no-non-null-assertion": "off",
+
     // Vue
-    "vue/component-tags-order": [
-      "error",
-      { "order": ["template", "script", "style"] }
-    ],
+    "vue/component-tags-order": ["error", { "order": ["template", "script", "style"] }],
 
     // Import
     "import/prefer-default-export": "off",
