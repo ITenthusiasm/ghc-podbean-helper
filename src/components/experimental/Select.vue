@@ -9,7 +9,7 @@
       v-on="searchHandlers"
     />
 
-    <div v-show="showOptions" :ref="(el) => (select.dropdown = el)" class="dropdown">
+    <div v-if="showOptions" :ref="(el) => (select.dropdown = el)" class="dropdown" role="menu">
       <div
         v-for="(option, i) in filteredOptions"
         :key="option.value || option"
@@ -100,11 +100,20 @@ export default defineComponent({
 
     /* -------------------- Effects -------------------- */
     watch([toRef(select, "value"), toRef(props, "value"), toRef(props, "modelValue")], () => {
-      if (!valueIsControlled) search.element!.placeholder = select.value;
+      if (valueIsControlled) {
+        const valueProp = getValueProp() as string;
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define -- Unavoidable
+        if (selectValueIsValid(valueProp)) search.element!.placeholder = valueProp;
+        return;
+      }
 
-      const valueProp = getValueProp() as string;
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define -- Unavoidable
-      if (selectValueIsValid(valueProp)) search.element!.placeholder = valueProp;
+      if (select.value === "") search.element!.placeholder = select.value;
+      else if (typeof props.options[0] === "string") search.element!.placeholder = select.value;
+      else {
+        const { filteredOptions } = select as { filteredOptions: OptionObject[] };
+        const option = filteredOptions.find((o) => o.value === select.value) as OptionObject;
+        search.element!.placeholder = option.label;
+      }
     });
 
     watch(toRef(select, "filteredOptions"), () => (select.activeOption = 0));
@@ -113,6 +122,7 @@ export default defineComponent({
     // Note: The internal `select.value` will always be valid and never needs to be checked.
     function selectValueIsValid(value: string | undefined): boolean {
       if (value === undefined) return false;
+      if (value === "") return true;
 
       return select.filteredOptions.some((o) => {
         const filteredValue = typeof o === "string" ? o : o.value;
@@ -174,7 +184,6 @@ export default defineComponent({
 
           emit("change", value);
           emit("update:modelValue", value);
-          search.element!.placeholder = value;
           if (!valueIsControlled) select.value = value;
         }
         // Move cursor up
