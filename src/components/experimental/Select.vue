@@ -13,8 +13,7 @@
       <div
         v-for="(option, i) in filteredOptions"
         :key="option.value || option"
-        class="option"
-        :class="{ 'option--active': i === activeOption }"
+        :class="[i === activeOption ? 'option--active' : 'option']"
         role="option"
         v-on="optionHandlers"
       >
@@ -260,11 +259,12 @@ export default defineComponent({
     background-color: white;
     text-align: left;
 
-    & > div[role="option"].option {
+    & > .option {
       cursor: pointer;
       padding: 8px;
 
       &--active {
+        @extend .option;
         color: white;
         background-color: #2684ff;
       }
