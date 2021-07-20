@@ -40,7 +40,7 @@ describe("Select", () => {
     const label = document.createElement("label");
     const selectId = "test-select";
     label.htmlFor = selectId;
-    label.innerHTML = testLabel;
+    label.textContent = testLabel;
 
     document.body.appendChild(container);
     container.appendChild(label);
