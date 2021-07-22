@@ -238,6 +238,8 @@ export default defineComponent({
   display: inline-block;
 
   & > input[type="text"] {
+    margin: 0; // Prevent cascading margins from parents
+
     &:not(:focus)::placeholder {
       color: black;
     }
@@ -249,7 +251,6 @@ export default defineComponent({
 
     border: 2px solid #42424242;
     border-radius: 5px;
-    margin-top: -4px;
 
     width: 100%;
     box-sizing: border-box;
