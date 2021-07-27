@@ -1,5 +1,10 @@
 # Notes and Findings
 
+## Personal Notes
+
+- `bloated` in a commit message indicates a commit that could not be practically made atomic at the time. Bloated commits should be avoided whenever possible. However, `bloated` is intended to _try_ to help clarify history when such commits are "unavoidable". ("Where did this ton of changes come from? Oh...")
+  - Of course, we only recently started getting into the concept of "atomic commits". So the many of the much earlier comments will likely be bloated. :)
+
 ## Typescript
 
 - [Destructuring nullable objects](https://stackoverflow.com/questions/45210111/destructuring-nullable-objects)
