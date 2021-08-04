@@ -42,7 +42,11 @@ export async function applyID3Tags(data: SermonDetails): NodeID3Promise {
   return success;
 }
 
-/** Updates an existing sermon file's name based on the provided sermon data */
+/**
+ * Updates an existing sermon file's name based on the provided sermon data
+ * @param sermonInfo
+ * @returns The sermon's new file name
+ */
 export async function updateSermonFileName(sermonInfo: SermonDetails): Promise<string> {
   const { date, time, speaker, sermonFileName } = sermonInfo;
 
