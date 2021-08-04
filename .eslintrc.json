@@ -27,6 +27,7 @@
   "rules": {
     "func-names": "off",
     "no-return-assign": "off",
+    "lines-between-class-members": "off",
 
     // TypeScript conflits
     "no-use-before-define": "off",
