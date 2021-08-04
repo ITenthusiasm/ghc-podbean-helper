@@ -1,5 +1,4 @@
-/** Representation of sermon info */
-export interface SermonInfo {
+export interface SermonFormData {
   speaker: { new: boolean; value: string; firstName: string; lastName: string };
   title: string;
   series: { new: boolean; value: string; newValue: string };

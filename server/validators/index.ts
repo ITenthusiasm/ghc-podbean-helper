@@ -1,1 +1,1 @@
-export { default as SermonInfoValidator } from "./SermonInfoValidator";
+export { default as SermonFormDataValidator } from "./SermonFormDataValidator";

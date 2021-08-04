@@ -2,11 +2,11 @@ import { promises as fs } from "fs";
 import path from "path";
 import { UserError } from "../models/errors";
 import { speakers as speakersDb, series as seriesDb } from "../test-data"; // NOTE: Should be replaced in the future
-import type { SermonInfo } from "../types";
+import type { SermonFormData } from "../types";
 
 // TODO: Should we enforce that all inputs are strings?
-class SermonInfoValidator {
-  static async validate(sermonInfo: SermonInfo): Promise<void> {
+class SermonFormDataValidator {
+  static async validate(sermonInfo: SermonFormData): Promise<void> {
     this.#validateSpeaker(sermonInfo.speaker);
     this.#validateTitle(sermonInfo.title, sermonInfo.time);
     this.#validateSeries(sermonInfo.series);
@@ -17,7 +17,7 @@ class SermonInfoValidator {
     await this.#validateFile("thumbnail", sermonInfo.sermonPicName);
   }
 
-  static #validateSpeaker(speaker: SermonInfo["speaker"]): void {
+  static #validateSpeaker(speaker: SermonFormData["speaker"]): void {
     if (speaker.new && (!speaker.firstName || !speaker.lastName))
       throw new UserError("A first name and last name are required for new speakers.");
 
@@ -26,19 +26,19 @@ class SermonInfoValidator {
       throw new UserError(`No existing speaker was found with the name ${speaker.value}.`);
   }
 
-  static #validateTitle(title: SermonInfo["title"], timeOfDay: SermonInfo["time"]): void {
+  static #validateTitle(title: SermonFormData["title"], timeOfDay: SermonFormData["time"]): void {
     if (!title && timeOfDay !== "Sunday Evening")
       throw new UserError("An empty title is only allowed for evening services.");
   }
 
-  static #validateSeries(series: SermonInfo["series"]): void {
+  static #validateSeries(series: SermonFormData["series"]): void {
     if (!series.new && !seriesDb.includes(series.value)) {
       // TODO: Use a more robust lookup for series
       throw new UserError(`No existing series called ${series.value} was found.`);
     }
   }
 
-  static #validateReference(reference: SermonInfo["reference"]): void {
+  static #validateReference(reference: SermonFormData["reference"]): void {
     if (!reference.book && !reference.passage) return;
 
     if (!reference.book || !reference.passage) {
@@ -50,7 +50,7 @@ class SermonInfoValidator {
     // TODO: Should we more strictly validate Bible references?
   }
 
-  static #validateDate(date: SermonInfo["date"]): void {
+  static #validateDate(date: SermonFormData["date"]): void {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       const error = new UserError("An invalid date was provided.");
       error.info = "The expected date format is 'YYYY-MM-DD'.";
@@ -60,7 +60,7 @@ class SermonInfoValidator {
     // TODO: Should we validate the individual components of the date?
   }
 
-  static #validateTime(time: SermonInfo["time"]): void {
+  static #validateTime(time: SermonFormData["time"]): void {
     if (time !== "Sunday Morning" && time !== "Sunday Evening" && time !== "Other") {
       throw new UserError("An invalid time of day was provided.");
     }
@@ -87,4 +87,4 @@ class SermonInfoValidator {
   }
 }
 
-export default SermonInfoValidator;
+export default SermonFormDataValidator;
