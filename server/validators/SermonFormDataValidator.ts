@@ -67,6 +67,12 @@ class SermonFormDataValidator {
   }
 
   static async #validateFile(type: "sermon file" | "thumbnail", filename: string): Promise<void> {
+    // Validate file extension
+    const properExt = type === "sermon file" ? "mp3" : "png";
+    if (!new RegExp(`[.]${properExt}$`).test(filename))
+      throw new UserError(`Only .${properExt} files are allowed for ${type}s.`);
+
+    // Validate file destination
     const sermonDirPath = process.env.SERMON_FILES_DIR as string;
     const picDirPath = process.env.THUMBNAILS_DIR as string;
     const directoryPath = type === "sermon file" ? sermonDirPath : picDirPath;
