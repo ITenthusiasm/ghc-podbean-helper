@@ -8,3 +8,8 @@ export interface SermonFormData {
   sermonFileName: string;
   sermonPicName: string;
 }
+
+export interface SermonDetails extends Omit<SermonFormData, "speaker" | "series"> {
+  speaker: string;
+  series: string;
+}
