@@ -9,10 +9,7 @@ const frontendFolder = path.resolve(__dirname, "src");
 const config = {
   mode: "development",
   devtool: "inline-source-map",
-  entry: [
-    path.resolve(__dirname, "src/main.ts"),
-    "webpack-hot-middleware/client?noInfo=true",
-  ],
+  entry: [path.resolve(__dirname, "src/main.ts"), "webpack-hot-middleware/client?noInfo=true"],
   target: "web",
   output: {
     path: path.resolve(__dirname, "public"),
@@ -34,11 +31,13 @@ const config = {
       {
         test: /\.ts$/,
         include: frontendFolder,
-        use: [
-          { loader: "ts-loader", options: { appendTsSuffixTo: [/\.vue$/] } },
-        ],
+        use: [{ loader: "ts-loader", options: { appendTsSuffixTo: [/\.vue$/] } }],
       },
-      { test: /\.vue$/, include: frontendFolder, use: ["vue-loader"] },
+      {
+        test: /\.vue$/,
+        include: frontendFolder,
+        use: "vue-loader",
+      },
       {
         test: /\.scss$/,
         include: frontendFolder,
