@@ -14,7 +14,7 @@ async function startServer(): Promise<http.Server> {
   // Dev-only configurations
   if (process.env.NODE_ENV === "development") {
     const { default: webpack } = await import("webpack");
-    const { default: config } = await import("../webpack.config.dev.js");
+    const { default: config } = await import("../webpack.config.js");
     const compiler = webpack(config);
 
     // Setup express with webpack dev middleware and webpack hot middleware
