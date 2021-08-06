@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import { clientRouter } from "./routes";
+import { clientRouter, podbeanRouter } from "./routes";
 
 async function startServer(): Promise<http.Server> {
   // Initialize Server
@@ -27,6 +27,7 @@ async function startServer(): Promise<http.Server> {
   }
 
   // Setup routes
+  app.use("/api", podbeanRouter);
   app.use("/", clientRouter);
 
   // Create and start the server
