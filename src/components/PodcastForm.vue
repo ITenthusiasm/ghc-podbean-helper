@@ -100,6 +100,7 @@ import Select from "@/components/experimental/Select.vue";
 import speakers from "../../server/test-data/speakers";
 import seriesOpts from "../../server/test-data/series";
 import bibleBooks from "../../server/test-data/bibleBooks";
+import { SermonFormData } from "../../server/types";
 
 export default defineComponent({
   name: "PodcastForm",
@@ -120,7 +121,7 @@ export default defineComponent({
       title: "",
       series: { new: false, value: "", newValue: "" },
       reference: { book: "Genesis", passage: "" },
-      date: today.toISOString().split("T")[0],
+      date: today.toISOString().split("T")[0] as SermonFormData["date"],
       time: initialTime,
       sermonFile: {} as File,
       sermonPic: {} as File,
@@ -135,15 +136,34 @@ export default defineComponent({
       console.log(form.sermonPic);
     }
 
-    function handleSubmit() {
-      console.log(form.sermonFile.name);
+    async function handleSubmit() {
+      console.log(form);
 
-      // apiClient.post("/api/upload");
+      const sermonInfo: SermonFormData = Object.assign(form, {
+        sermonFileName: form.sermonFile.name,
+        sermonPicName: form.sermonPic.name,
+      });
+
+      console.log("Submitted Data: ", sermonInfo);
+
+      try {
+        await axios.post("/api/upload", sermonInfo);
+      } catch (err) {
+        const { response } = err;
+        if (response.status === 400) {
+          console.log(response.data);
+          console.error(err);
+        }
+      }
     }
 
     async function tryPodbeanStuff() {
-      const data = await axios.get("/api/token");
-      console.log(data);
+      try {
+        const data = await axios.get("/api/token");
+        console.log(data);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     return {
