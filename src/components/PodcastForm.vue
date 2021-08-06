@@ -86,8 +86,6 @@
       </div>
     </div>
 
-    <button type="button" @click="tryPodbeanStuff()">Try Podbean Stuff</button>
-
     <button>Submit</button>
     <button disabled>Trash</button>
   </form>
@@ -157,15 +155,6 @@ export default defineComponent({
       }
     }
 
-    async function tryPodbeanStuff() {
-      try {
-        const data = await axios.get("/api/token");
-        console.log(data);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
     return {
       ...toRefs(form),
       speakers,
@@ -174,7 +163,6 @@ export default defineComponent({
       handleFileChange,
       handlePicChange,
       handleSubmit,
-      tryPodbeanStuff,
     };
   },
 });
