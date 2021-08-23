@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import path from "path";
 import { promises as fs } from "fs";
+import { URLSearchParams } from "url";
 import { PodbeanError } from "../models/errors";
 import type { SermonDetails } from "../types";
 
@@ -41,20 +42,33 @@ async function getToken(): Promise<string> {
 async function getFileKey(filename: string): Promise<string> {
   const access_token = await getToken();
 
-  const [, ext] = filename.split(".");
+  const [, ext] = filename.split(".") as [never, "mp3" | "png"];
   const content_type = ext === "mp3" ? ("audio/mp3" as const) : ("image/png" as const);
 
-  const filepath = path.resolve(process.env.SERMON_FILES_DIR as string, filename);
+  const filepath =
+    ext === "mp3"
+      ? path.resolve(process.env.SERMON_FILES_DIR as string, filename)
+      : path.resolve(process.env.THUMBNAILS_DIR as string, filename);
   const { size: filesize } = await fs.stat(filepath);
 
   try {
+    // Get pre-signed URL and file key
     const { data } = await podbeanApi.get("files/uploadAuthorize", {
       params: { access_token, filename, filesize, content_type },
     });
 
+    // Upload file
+    const file = await fs.readFile(filepath);
+    await axios.put(data.presigned_url, file, { headers: { "Content-Type": content_type } });
+
+    // Return file key
     return data.file_key as string;
   } catch (err) {
-    throw new PodbeanError(err.response.data);
+    // Check if Podbean Error
+    if (err.response.data.error_description) throw new PodbeanError(err.response.data);
+
+    // Handle other kinds of errors
+    throw new Error(err.response.data);
   }
 }
 
@@ -68,8 +82,6 @@ async function publish(sermonInfo: SermonDetails): Promise<string> {
   const access_token = await getToken();
   const media_key = await getFileKey(sermonFileName);
   const logo_key = await getFileKey(sermonPicName);
-  console.log("Media Key: ", media_key);
-  console.log("Logo Key: ", logo_key);
 
   // Prepare data for Podbean to display
   const podcastTitle = `${reference.book} ${reference.passage}: ${title} (${speaker})`;
@@ -101,27 +113,13 @@ async function publish(sermonInfo: SermonDetails): Promise<string> {
       logo_key,
     };
 
-    const axiosConfig: AxiosRequestConfig = {
-      headers,
-      params: data,
-    };
-
-    // Try to verify that we're getting the right episode type
-    const { data: getPodcast } = await podbeanApi.post("podcasts", null, {
-      headers,
-      params: { access_token },
-    });
-    console.dir(getPodcast, { depth: 5 });
-    const episodeType = getPodcast.podcasts[0].allow_episode_type[0];
-    console.log("Episode Type: ", episodeType);
-
     // Try to publish episode
-    axiosConfig.params.type = episodeType;
-    const { data: episode } = await podbeanApi.post("episodes", null, axiosConfig);
+    const qs = new URLSearchParams({ ...data });
+    const response = await podbeanApi.post("episodes", qs.toString(), { headers });
 
     // Look at results
-    console.log(episode.permalink_url);
-    return episode.permalink_url as string;
+    console.log("Permalink URL for new episode: ", response.data.episode.permalink_url);
+    return response.data.episode.permalink_url as string;
   } catch (err) {
     console.error(err);
     throw new PodbeanError(err.response.data);
