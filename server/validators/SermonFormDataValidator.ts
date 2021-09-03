@@ -49,13 +49,34 @@ class SermonFormDataValidator {
   }
 
   static #validateDate(date: SermonFormData["date"]): void {
+    // Validate general format
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       const error = new UserError("An invalid date was provided.");
       error.info = "The expected date format is 'YYYY-MM-DD'.";
       throw error;
     }
 
-    // TODO: Should we validate the individual components of the date?
+    const [year, month, day] = date.split("-").map((datePart) => Number(datePart));
+
+    // Validate year
+    if (year < 1900 || year > new Date().getFullYear()) {
+      const error = new UserError("An invalid year was provided.");
+      error.info = "Year must be no earlier than 1900 and no later than this year.";
+      throw error;
+    }
+
+    // Validate month
+    if (month < 1 || month > 12) throw new UserError("An invalid month was provided.");
+
+    // Validate day
+    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0)) monthDays[1] = 29;
+
+    if (day < 1 || day > monthDays[month - 1]) {
+      const error = new UserError("An invalid day was provided for the given month and year.");
+      error.suggestion = "Remember to account for leap years.";
+      throw error;
+    }
   }
 
   static #validateTime(time: SermonFormData["time"]): void {
