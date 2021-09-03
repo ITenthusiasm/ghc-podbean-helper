@@ -21,7 +21,6 @@ class SermonFormDataValidator {
     if (speaker.new && (!speaker.firstName || !speaker.lastName))
       throw new UserError("A first name and last name are required for new speakers.");
 
-    // TODO: Use a more robust lookup for speakers
     if (!speakersDb.includes(speaker.value))
       throw new UserError(`No existing speaker was found with the name "${speaker.value}".`);
   }
@@ -33,7 +32,6 @@ class SermonFormDataValidator {
 
   static #validateSeries(series: SermonFormData["series"]): void {
     if (!series.new && !seriesDb.includes(series.value)) {
-      // TODO: Use a more robust lookup for series
       throw new UserError(`No existing series called "${series.value}" was found.`);
     }
   }
