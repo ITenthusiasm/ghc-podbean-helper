@@ -1,4 +1,4 @@
-const speakers = [
+[
   "Kyle Baker",
   "Derek Bass",
   "Chap Bettis",
@@ -37,7 +37,5 @@ const speakers = [
   "Ryan Townsend",
   "Philip Van Steenburgh",
   "Jonas Williams",
-  "Tim Zulker",
-];
-
-export default speakers;
+  "Tim Zulker"
+]

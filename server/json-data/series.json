@@ -1,4 +1,4 @@
-const series = [
+[
   "(None)",
   "Advance",
   "Advent",
@@ -52,7 +52,5 @@ const series = [
   "What's Really Important?",
   "Why Believe?",
   "Worship Matters",
-  "You Will Be My Witnesses",
-];
-
-export default series;
+  "You Will Be My Witnesses"
+]

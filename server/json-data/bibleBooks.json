@@ -1,4 +1,4 @@
-const bibleBooks = [
+[
   "Genesis",
   "Exodus",
   "Leviticus",
@@ -64,7 +64,5 @@ const bibleBooks = [
   "2 John",
   "3 John",
   "Jude",
-  "Revelation",
-];
-
-export default bibleBooks;
+  "Revelation"
+]
