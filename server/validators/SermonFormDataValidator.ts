@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { UserError } from "../models/errors";
-import { speakers as speakersDb, series as seriesDb } from "../test-data"; // NOTE: Should be replaced in the future
+import { speakers as speakersDb, series as seriesDb } from "../json-data";
 import type { SermonFormData } from "../types";
 
 // TODO: Should we enforce that all inputs are strings?
