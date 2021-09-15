@@ -2,6 +2,10 @@
 
 A simple tool for easily managing Grace Harbor's audio via the Podbean API
 
+## Important Notes
+
+Did you remember to check all remaining `TODO`s? :smirk:
+
 ## Special Thanks
 
 For the people who helped provide inspiration along the way:
