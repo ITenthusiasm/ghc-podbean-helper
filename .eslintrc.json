@@ -51,6 +51,12 @@
     {
       "files": ["**/*.js"],
       "rules": { "@typescript-eslint/no-var-requires": "off" }
+    },
+
+    // One-off overrides
+    {
+      "files": "test-utils/extendExpect.ts",
+      "rules": { "import/no-extraneous-dependencies": "off" }
     }
   ]
 }
