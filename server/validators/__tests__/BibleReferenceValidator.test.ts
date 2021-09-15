@@ -1,6 +1,6 @@
 import "../../../test-utils/extendExpect";
 import { UserError } from "../../models/errors";
-import BibleData from "../bibleData.json";
+import BibleData from "../utils/bibleData.json";
 import { BibleReferenceValidator } from "..";
 
 // SNAPSHOTS WARNING: Jest cannot handle generating multiple inline snaphots at the same time,

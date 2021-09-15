@@ -1,5 +1,5 @@
 import { UserError } from "../models/errors";
-import books from "./bibleData.json";
+import books from "./utils/bibleData.json";
 
 // Utility Types
 type BibleVerse = { chapter: number; verse?: number };
