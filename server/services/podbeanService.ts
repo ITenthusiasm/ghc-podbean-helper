@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import path from "path";
 import { promises as fs } from "fs";
 import { URLSearchParams } from "url";
@@ -34,7 +34,7 @@ async function getToken(): Promise<string> {
     token.createdAt = NaN;
     token.expiresIn = NaN;
 
-    throw new PodbeanError(err.response.data);
+    throw new PodbeanError((err as AxiosError).response?.data);
   }
 }
 
@@ -65,10 +65,11 @@ async function getFileKey(filename: string): Promise<string> {
     return data.file_key as string;
   } catch (err) {
     // Check if Podbean Error
-    if (err.response.data.error_description) throw new PodbeanError(err.response.data);
+    if ((err as AxiosError).response?.data.error_description)
+      throw new PodbeanError((err as AxiosError).response?.data);
 
     // Handle other kinds of errors
-    throw new Error(err.response.data);
+    throw new Error((err as AxiosError).response?.data);
   }
 }
 
@@ -121,8 +122,7 @@ async function publish(sermonInfo: SermonDetails): Promise<string> {
     console.log("Permalink URL for new episode: ", response.data.episode.permalink_url);
     return response.data.episode.permalink_url as string;
   } catch (err) {
-    console.error(err);
-    throw new PodbeanError(err.response.data);
+    throw new PodbeanError((err as AxiosError).response?.data);
   }
 }
 

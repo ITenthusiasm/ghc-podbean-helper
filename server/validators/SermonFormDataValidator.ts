@@ -102,7 +102,7 @@ class SermonFormDataValidator {
       await fs.access(path.resolve(directoryPath, filename));
     } catch (err) {
       // An unexpected error occurred
-      if (err.code !== "ENOENT") throw err;
+      if ((err as NodeJS.ErrnoException).code !== "ENOENT") throw err;
 
       // A file doesn't exist
       const userError = new UserError(`Could not find ${type} with the name ${filename}.`);

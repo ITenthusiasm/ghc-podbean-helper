@@ -74,7 +74,7 @@ export async function updateSermonFileName(sermonInfo: SermonDetails): Promise<s
     throw error;
   } catch (err) {
     // File already exists or an unexpected error happened
-    if (err.code !== "ENOENT") throw err;
+    if ((err as NodeJS.ErrnoException).code !== "ENOENT") throw err;
 
     // File rename is safe
     await fs.rename(getPathFor("sermon", sermonFileName), getPathFor("sermon", newFilename));
