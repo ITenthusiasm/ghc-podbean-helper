@@ -3,6 +3,7 @@ import path from "path";
 import { UserError } from "../models/errors";
 import { speakers as speakersDb, series as seriesDb } from "../json-data";
 import type { SermonFormData } from "../types";
+import { BibleReferenceValidator } from ".";
 
 // TODO: Should we enforce that all inputs are strings?
 class SermonFormDataValidator {
@@ -45,7 +46,7 @@ class SermonFormDataValidator {
       throw error;
     }
 
-    // TODO: Should we more strictly validate Bible references?
+    BibleReferenceValidator.validate(`${reference.book} ${reference.passage}`);
   }
 
   static #validateDate(date: SermonFormData["date"]): void {
