@@ -32,9 +32,11 @@ class SermonFormDataValidator {
   }
 
   static #validateSeries(series: SermonFormData["series"]): void {
-    if (!series.new && !seriesDb.includes(series.value)) {
+    if (series.new && !series.newValue)
+      throw new UserError("A valid series name is required for new series.");
+
+    if (!series.new && !seriesDb.includes(series.value))
       throw new UserError(`No existing series called "${series.value}" was found.`);
-    }
   }
 
   static #validateReference(reference: SermonFormData["reference"]): void {
