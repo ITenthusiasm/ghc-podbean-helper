@@ -18,7 +18,7 @@ expect.extend({
             this.utils.matcherHint("toThrowWithError", undefined, undefined, {
               promise: this.promise,
             }),
-            `'${this.promise}' is an invalid modifier for 'toThrowWithError'`,
+            `"${this.promise}" is an invalid modifier for "toThrowWithError"`,
             ""
           ),
       };
