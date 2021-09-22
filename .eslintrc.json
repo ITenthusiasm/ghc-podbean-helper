@@ -49,6 +49,10 @@
   "overrides": [
     { "files": ["server/**/*"], "rules": { "no-console": "off" } },
     {
+      "files": ["**/*.test.ts"],
+      "rules": { "@typescript-eslint/no-use-before-define": ["error", { "functions": false }] }
+    },
+    {
       "files": ["**/*.js"],
       "rules": { "@typescript-eslint/no-var-requires": "off" }
     },

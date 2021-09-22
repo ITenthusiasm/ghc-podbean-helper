@@ -19,8 +19,12 @@ class SermonFormDataValidator {
   }
 
   static #validateSpeaker(speaker: SermonFormData["speaker"]): void {
-    if (speaker.new && (!speaker.firstName || !speaker.lastName))
-      throw new UserError("A first name and last name are required for new speakers.");
+    if (speaker.new) {
+      if (!speaker.firstName || !speaker.lastName)
+        throw new UserError("A first name and last name are required for new speakers.");
+
+      return;
+    }
 
     if (!speakersDb.includes(speaker.value))
       throw new UserError(`No existing speaker was found with the name "${speaker.value}".`);
@@ -32,8 +36,10 @@ class SermonFormDataValidator {
   }
 
   static #validateSeries(series: SermonFormData["series"]): void {
-    if (series.new && !series.newValue)
-      throw new UserError("A valid series name is required for new series.");
+    if (series.new) {
+      if (!series.newValue) throw new UserError("A valid series name is required for new series.");
+      return;
+    }
 
     if (!series.new && !seriesDb.includes(series.value))
       throw new UserError(`No existing series called "${series.value}" was found.`);
@@ -43,8 +49,8 @@ class SermonFormDataValidator {
     if (!reference.book && !reference.passage) return;
 
     if (!reference.book || !reference.passage) {
-      const error = new UserError("An invalid Bible reference was provided.");
-      error.suggestion = "Please use a valid Bible reference or exclude it entirely.";
+      const error = new UserError("An incomplete Bible reference was provided.");
+      error.suggestion = "Please use a complete Bible reference or exclude it entirely.";
       throw error;
     }
 
@@ -108,7 +114,7 @@ class SermonFormDataValidator {
       if ((err as NodeJS.ErrnoException).code !== "ENOENT") throw err;
 
       // A file doesn't exist
-      const userError = new UserError(`Could not find ${type} with the name ${filename}.`);
+      const userError = new UserError(`Could not find ${type} with the name "${filename}".`);
       userError.info = `${capitalType}s are only allowed to come from ${directoryPath}.`;
       throw userError;
     }
