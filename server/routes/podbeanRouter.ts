@@ -8,16 +8,6 @@ import type { SermonFormData, SermonDetails } from "../types";
 /** Router handling any Podbean API requests */
 const podbeanRouter = express.Router();
 
-// TODO: Remove after testing is complete and this is no longer needed.
-podbeanRouter.get("/token", async function (_, res, next) {
-  try {
-    const token = await podbeanService.getToken();
-    res.json(token);
-  } catch (err) {
-    next(err);
-  }
-});
-
 podbeanRouter.post("/upload", async function (req, res, next) {
   try {
     // Run validation
