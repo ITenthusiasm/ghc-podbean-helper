@@ -14,6 +14,6 @@ module.exports = {
     "@/(.*)": "<rootDir>/src/$1",
   },
   testEnvironment: "jest-environment-jsdom",
-  testMatch: ["<rootDir>/src/**/*.test.ts"], // TODO: Correct to <rootDir>/src/**/__tests__/*.test.ts after moving Select.test.ts
+  testMatch: ["<rootDir>/src/**/__tests__/*.test.ts"],
   transform: { "\\.vue$": "vue3-jest", "\\.ts$": "babel-jest" },
 };

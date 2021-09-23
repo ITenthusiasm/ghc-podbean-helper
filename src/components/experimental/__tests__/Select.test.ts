@@ -2,7 +2,7 @@ import { ref, Ref, defineComponent } from "vue";
 import { render, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/extend-expect";
-import Select from "./Select.vue";
+import Select from "../Select.vue";
 
 // Type defs
 type Options = string[] | { label: string; value: string }[];
