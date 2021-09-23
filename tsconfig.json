@@ -5,6 +5,7 @@
     "outDir": "build",
     "strict": true,
     "checkJs": true,
+    "skipLibCheck": true,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",

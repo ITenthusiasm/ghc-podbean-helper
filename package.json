@@ -10,7 +10,7 @@
     "test": "jest --watch",
     "test:all": "jest --watchAll",
     "test:coverage": "jest --coverage",
-    "lint": "eslint '**/*.{js,ts,vue}'"
+    "lint": "eslint '**/*.{js,ts,vue}' && tsc --noEmit"
   },
   "dependencies": {
     "axios": "^0.21.4",

@@ -13,6 +13,8 @@
 
 - [Destructuring nullable objects](https://stackoverflow.com/questions/45210111/destructuring-nullable-objects)
 - [Adding to global TS namespaces](https://stackoverflow.com/questions/57132428/augmentations-for-the-global-scope-can-only-be-directly-nested-in-external-modul) (seems hackish though?)
+- [`skipLibCheck`](https://www.typescriptlang.org/tsconfig#skipLibCheck)
+- Note: We aren't supporting type checking of `.vue` files in our `lint` npm script yet.
 
 ## Sass
 
