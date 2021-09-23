@@ -1,7 +1,23 @@
 module.exports = {
-  moduleFileExtensions: ["ts", "vue", "js"],
-  moduleNameMapper: {
-    "@/(.*)": "<rootDir>/src/$1",
+  collectCoverageFrom: [
+    "<rootDir>/{src,server}/**/*.{ts,vue}",
+    "!<rootDir>/{src,server}/**/*.test.ts",
+    "!<rootDir>/src/main.ts",
+    "!<rootDir>/server/index.ts",
+  ],
+  coverageDirectory: "<rootDir>/coverage", // default
+  coverageThreshold: {
+    global: {
+      statements: 10,
+      branches: 10,
+      functions: 10,
+      lines: 10,
+    },
   },
-  transform: { "\\.vue$": "vue-jest", "\\.ts$": "ts-jest" },
+  projects: ["test-utils/jest.server.js", "test-utils/jest.client.js"],
+  watchPlugins: [
+    "jest-watch-select-projects",
+    "jest-watch-typeahead/filename",
+    "jest-watch-typeahead/testname",
+  ],
 };

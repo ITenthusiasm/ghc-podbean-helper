@@ -28,3 +28,4 @@
 
 - Thankfully, the obscure babel package is no longer needed for testing in Vue 3. But now `ts-jest` is required when using TS with Vue 3. It's not readily apparent why, though they seem to want access to all `tsconfig.json`s apparently. Search their docs and/or GitHub issues for more details. Maybe ask questions about if this is _really_ necessary and if there are other options. But for now, we have to make do with what we have... so we still have some "obscure packages"...but they're not as bad.
   - Also, it seems `vue-jest` is in the process of trying to support `jest v27`, **which provides its own type definitions**. Keep an eye out for the PR activity on `vue-jest` and `@testing-library/vue`.
+- See [here](https://github.com/vuejs/vue-jest/issues/355#details) for details on `vue-jest` package names and versions.
