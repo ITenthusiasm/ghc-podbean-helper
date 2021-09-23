@@ -63,7 +63,9 @@
 
     <div class="files">
       <div class="sermon">
-        <label for="file" class="upload-button">Upload Sermon</label>
+        <label for="file" class="upload-button" v-bind="labelProps" v-on="labelHandlers">
+          Upload Sermon
+        </label>
         <div v-if="sermonFile.name" class="sermon-file-name">{{ sermonFile.name }}</div>
         <input id="file" type="file" accept="audio/mp3" @change="handleFileChange" />
       </div>
@@ -92,18 +94,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
 import axios from "axios";
 import Select from "@/components/experimental/Select.vue";
-import speakers from "../../server/test-data/speakers";
-import seriesOpts from "../../server/test-data/series";
-import bibleBooks from "../../server/test-data/bibleBooks";
+import { speakers, series as seriesOpts, bibleBooks } from "../../server/json-data";
 import { SermonFormData } from "../../server/types";
 
 export default defineComponent({
   name: "PodcastForm",
   components: { Select },
   setup() {
+    // Setup
     const today = new Date();
     let initialTime: "Sunday Morning" | "Sunday Evening" | "Other";
 
@@ -114,6 +115,7 @@ export default defineComponent({
       initialTime = "Other";
     }
 
+    // State
     const form = reactive({
       speaker: { new: false, value: "", firstName: "", lastName: "" },
       title: "",
@@ -125,6 +127,7 @@ export default defineComponent({
       sermonPic: {} as File,
     });
 
+    // Handlers
     function handleFileChange(event: Event) {
       [form.sermonFile] = (event.target as HTMLInputElement).files as FileList;
     }
@@ -155,11 +158,28 @@ export default defineComponent({
       }
     }
 
+    // Object to treat labels like buttons
+    const labelProps = {
+      role: "button",
+      tabindex: "0",
+    };
+
+    const labelHandlers = {
+      keydown: (event: KeyboardEvent) => {
+        if ([" ", "Enter"].includes(event.key)) {
+          event.preventDefault();
+          (event.target as HTMLElement).click();
+        }
+      },
+    };
+
     return {
       ...toRefs(form),
       speakers,
       seriesOpts,
       bibleBooks,
+      labelProps,
+      labelHandlers,
       handleFileChange,
       handlePicChange,
       handleSubmit,
