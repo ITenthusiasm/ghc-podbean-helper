@@ -1,0 +1,20 @@
+name: validate-code
+on: [push]
+jobs:
+  run-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install node
+        uses: actions/setup-node@v2
+
+      - name: Install node modules
+        run: npm install
+
+      - name: Run tests
+        run: npm run test:coverage
+
+      - name: Lint code
+        run: npm run lint
