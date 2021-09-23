@@ -401,7 +401,7 @@ describe("Sermon Form Data Validator", () => {
         (error: UserError) => {
           expect(error).toMatchInlineUserErrorSnapshot(`
             "message: Could not find thumbnail with the name \\"no-thumbnail.png\\".
-            info: Thumbnails are only allowed to come from /Users/isaiahthomason/repos/personal/ghc-podbean-helper/server/validators/__tests__/test-data/thumbnails-dir.
+            info: Thumbnails are only allowed to come from the \\"thumbnails-dir\\" folder.
             suggestion: "
           `);
         }
@@ -442,7 +442,7 @@ describe("Sermon Form Data Validator", () => {
         (error: UserError) => {
           expect(error).toMatchInlineUserErrorSnapshot(`
             "message: Could not find sermon file with the name \\"no-sermon-file.mp3\\".
-            info: Sermon files are only allowed to come from /Users/isaiahthomason/repos/personal/ghc-podbean-helper/server/validators/__tests__/test-data/sermon-files-dir.
+            info: Sermon files are only allowed to come from the \\"sermon-files-dir\\" folder.
             suggestion: "
           `);
         }

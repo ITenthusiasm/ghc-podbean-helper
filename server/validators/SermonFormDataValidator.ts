@@ -115,7 +115,9 @@ class SermonFormDataValidator {
 
       // A file doesn't exist
       const userError = new UserError(`Could not find ${type} with the name "${filename}".`);
-      userError.info = `${capitalType}s are only allowed to come from ${directoryPath}.`;
+      userError.info = `${capitalType}s are only allowed to come from the "${directoryPath
+        .split("/")
+        .pop()}" folder.`;
       throw userError;
     }
   }
