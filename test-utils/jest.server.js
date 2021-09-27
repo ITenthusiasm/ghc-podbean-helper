@@ -1,5 +1,6 @@
 const path = require("path");
 
+/** @type {import("@jest/types").Config.InitialOptions} */
 module.exports = {
   rootDir: path.join(__dirname, ".."),
   collectCoverageFrom: ["<rootDir>/server/**/*.ts", "!<rootDir>/**/*.test.ts", "!server/index.ts"],
