@@ -1,1 +1,1 @@
-export { default as podbeanService } from "./podbeanService";
+export { default as PodbeanService } from "./podbeanService";

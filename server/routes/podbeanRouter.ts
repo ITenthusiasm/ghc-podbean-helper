@@ -1,6 +1,6 @@
 import express from "express";
 import { SermonFormDataValidator } from "../validators";
-import { podbeanService } from "../services";
+import { PodbeanService } from "../services";
 import { applyID3Tags, updateSermonFileName } from "../helpers/files";
 import { UserError } from "../models/errors";
 import type { SermonFormData, SermonDetails } from "../types";
@@ -25,7 +25,7 @@ podbeanRouter.post("/upload", async function (req, res, next) {
     const newSermonFileName = await updateSermonFileName(sermonInfo);
 
     // Publish episode
-    const url = await podbeanService.publish({ ...sermonInfo, sermonFileName: newSermonFileName });
+    const url = await PodbeanService.publish({ ...sermonInfo, sermonFileName: newSermonFileName });
     res.json(url);
   } catch (err) {
     if (err instanceof UserError) {
