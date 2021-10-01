@@ -65,7 +65,7 @@ class PodbeanService {
     }
   }
 
-  static async #getToken(): Promise<string> {
+  static #getToken = async (): Promise<string> => {
     const username = process.env.CLIENT_ID as string;
     const password = process.env.CLIENT_SECRET as string;
     const auth = { username, password };
@@ -90,9 +90,9 @@ class PodbeanService {
 
       throw new PodbeanError((err as AxiosError).response?.data);
     }
-  }
+  };
 
-  static async #getFileKey(filename: string): Promise<string> {
+  static #getFileKey = async (filename: string): Promise<string> => {
     const access_token = await this.#getToken();
 
     const [, ext] = filename.split(".") as [never, "mp3" | "png"];
@@ -124,7 +124,7 @@ class PodbeanService {
       // Handle other kinds of errors
       throw new Error((err as AxiosError).response?.data);
     }
-  }
+  };
 }
 
 export default PodbeanService;
