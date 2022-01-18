@@ -96,6 +96,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 import axios from "axios";
+import type { AxiosError } from "axios";
 import Select from "@/components/experimental/Select.vue";
 import { speakers, series as seriesOpts, bibleBooks } from "../../server/json-data";
 import { SermonFormData } from "../../server/types";
@@ -150,7 +151,8 @@ export default defineComponent({
       try {
         await axios.post("/api/upload", sermonInfo);
       } catch (err) {
-        const { response } = err;
+        const { response } = err as Required<AxiosError>;
+
         if (response.status === 400) {
           console.log(response.data);
           console.error(err);
